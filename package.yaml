@@ -1,10 +1,10 @@
 name:                ykbr-ai
 version:             0.1.0.0
 github:              "githubuser/ykbr-ai"
-license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2018 Author name here"
+license:             MIT
+author:              "Yukibara"
+maintainer:          "nitic.mtbr@gmail.com"
+copyright:           "2018 Yukibara"
 
 extra-source-files:
 - README.md
@@ -24,6 +24,11 @@ dependencies:
 
 library:
   source-dirs: src
+  dependencies:
+  - http-conduit       # HTTPリクエストを投げるのに使う
+  - authenticate-oauth # OAuth認証に使う
+  - text               # Haskellでは文字列の扱いがやや面倒なので、楽にする
+  - aeson              # JSONパーザ
 
 executables:
   ykbr-ai-exe:
@@ -35,6 +40,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - ykbr-ai
+    - text
 
 tests:
   ykbr-ai-test:
