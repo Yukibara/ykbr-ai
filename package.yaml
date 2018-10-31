@@ -29,6 +29,7 @@ library:
   - authenticate-oauth # OAuth認証に使う
   - text               # Haskellでは文字列の扱いがやや面倒なので、楽にする
   - aeson              # JSONパーザ
+  - bytestring
 
 executables:
   ykbr-ai-exe:
