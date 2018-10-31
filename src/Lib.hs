@@ -37,7 +37,7 @@ tweet tw = do
     let botCredential = newCredential' accessTokens
     req     <- parseRequest "https://api.twitter.com/1.1/statuses/update.json"
     manager <- newManager tlsManagerSettings
-    let postReq = urlEncodedBody [("status", encodeUtf8 tw] req
+    let postReq = urlEncodedBody [("status", encodeUtf8 tw)] req
     res <- do
         signedReq <- signOAuth botOAuth botCredential postReq
         httpLbs signedReq manager
