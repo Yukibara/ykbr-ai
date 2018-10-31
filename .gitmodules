@@ -1,0 +1,3 @@
+[submodule "hsmecab"]
+	path = hsmecab
+	url = https://github.com/Yukibara/hsmecab
