@@ -33,8 +33,17 @@ resolver: lts-12.16
 #  - auto-update
 #  - wai
 packages:
-- hsmecab
-- .
+- '.'
+- location: 
+    git: git@github.com:Yukibara/hsmecab.git
+    commit: 687dce1c22c6326d639c486087818fca0d97138a
+  extra-dep: true
+
+extra-include-dirs:
+- C:\Program Files\MeCab\sdk
+extra-lib-dirs:
+- C:\Program Files\MeCab\sdk
+
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
