@@ -7,4 +7,4 @@ module Main where
     
     main :: IO ()
     main = do
-      tweet "テストですよ、聞こえますか"
+      kaiseki
