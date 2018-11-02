@@ -40,9 +40,9 @@ extra-deps:
   commit: "687dce1"
 
 extra-include-dirs:
-- C:\Program Files\MeCab\sdk\include
+- C:\Program Files\MeCab\sdk
 extra-lib-dirs:
-- C:\Program Files\MeCab\sdk\lib
+- C:\Program Files\MeCab\sdk
 - C:\Program Files\MeCab\bin
 
 # Dependency packages to be pulled from upstream that are not in the resolver
