@@ -33,17 +33,21 @@ resolver: lts-12.16
 #  - auto-update
 #  - wai
 packages:
+
 - .
 
 extra-deps:
 - github: Yukibara/hsmecab
   commit: "687dce1"
 
+
 extra-include-dirs:
 - C:\Program Files\MeCab\sdk
 extra-lib-dirs:
 - C:\Program Files\MeCab\sdk
+
 - C:\Program Files\MeCab\bin
+
 
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.

@@ -43,6 +43,7 @@ executables:
     dependencies:
     - ykbr-ai
     - text
+    - mecab
 
 tests:
   ykbr-ai-test:
