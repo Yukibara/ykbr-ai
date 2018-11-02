@@ -40,9 +40,11 @@ extra-deps:
   commit: "687dce1"
 
 extra-include-dirs:
-- C:\Program Files\MeCab\sdk
+- C:\Program Files\MeCab\sdk\include
 extra-lib-dirs:
-- C:\Program Files\MeCab\sdk
+- C:\Program Files\MeCab\sdk\lib
+- C:\Program Files\MeCab\bin
+
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
