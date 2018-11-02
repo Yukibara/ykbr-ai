@@ -7,7 +7,7 @@ module Main where
     
     main :: IO ()
     main = do
-      yT <- ykbrTweet
-      case yT of
+      myTweet <- ykbrTweet
+      case myTweet of
         Left err -> error err
-        Right tl -> mapM_ (T.putStrLn . text) $ tl
+        Right tl -> generateBotTweet tl

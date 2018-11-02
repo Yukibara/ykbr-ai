@@ -5,11 +5,14 @@ module Lib
     ( Tweet(..)
     ,tweet
     ,ykbrTweet
+    ,generateBotTweet
     ) where
 
-import Data.Text as T
-import Data.Text.IO as T
+import Prelude
+import qualified Data.Text    as T
+import qualified Data.Text.IO as TIO
 import Data.Text.Encoding
+import Data.List (intercalate)
 import Data.Aeson
 import GHC.Generics
 import Network.HTTP.Conduit
@@ -17,7 +20,7 @@ import Web.Authenticate.OAuth
 import Config
 import Text.MeCab
 
-newtype Tweet = Tweet { text :: Text
+newtype Tweet = Tweet { text :: T.Text
                        } deriving (Show, Generic)
 
 instance FromJSON Tweet
@@ -32,9 +35,7 @@ newCredential' accessTokens =
         accessTokenSecretValue = accessTokenSecret accessTokens
     in newCredential accessTokenValue accessTokenSecretValue
 
-
-
-tweet :: Text -> IO ()
+tweet :: T.Text -> IO ()
 tweet tw = do
     botOAuth <- readOAuth
     accessTokens <- readAccessTokens
@@ -63,3 +64,14 @@ ykbrTweet = do
         manager   <- newManager tlsManagerSettings
         httpLbs signedReq manager
     return $ eitherDecode $ responseBody result
+
+generateBotTweet::String -> IO()
+generateBotTweet tweet = do
+    mecab <- new2 ""
+    cutLine <- mapM (parseToNodes mecab) (lines tweet) 
+    let sliceLine = map (filter(not . null) . map nodeSurface) cutLine
+    let seedWord = intercalate ["\n"] sliceLine
+
+
+
+    return ()
