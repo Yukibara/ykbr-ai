@@ -7,4 +7,7 @@ module Main where
     
     main :: IO ()
     main = do
-      kaiseki
+      yT <- ykbrTweet
+      case yT of
+        Left err -> error err
+        Right tl -> mapM_ (T.putStrLn . text) $ tl

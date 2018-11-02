@@ -4,7 +4,7 @@
 module Lib
     ( Tweet(..)
     ,tweet
-    ,kaiseki
+    ,ykbrTweet
     ) where
 
 import Data.Text as T
@@ -23,7 +23,8 @@ newtype Tweet = Tweet { text :: Text
 instance FromJSON Tweet
 instance ToJSON Tweet
 
-botName = "ykbr-ai"
+botName = "ykbr__ai"
+ykbrID = "790512282753048577"
 
 newCredential' :: TwitterAccessTokens -> Credential
 newCredential' accessTokens =
@@ -46,9 +47,19 @@ tweet tw = do
         httpLbs signedReq manager
     return ()
 
-kaiseki :: IO ()
-kaiseki = do
-  let text = "定義されていない参照ですではない"
-  mecab  <- new2 ""
-  result <- parse mecab text
-  T.putStrLn $ result
+ykbrTweet :: IO (Either String [Tweet])
+ykbrTweet = do 
+    -- 認証準備とかをします
+    botOAuth <- readOAuth
+    accessTokens <- readAccessTokens
+    let botCredential = newCredential' accessTokens
+
+    -- 取得
+    result <- do
+        req <-
+            parseRequest $ "https://api.twitter.com/1.1/statuses/user_timeline.json?user_id="
+            ++ ykbrID ++ "&count=200"
+        signedReq <- signOAuth botOAuth botCredential req
+        manager   <- newManager tlsManagerSettings
+        httpLbs signedReq manager
+    return $ eitherDecode $ responseBody result
