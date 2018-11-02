@@ -1,4 +1,5 @@
 .stack-work/
 ykbr-ai.cabal
 *~
-resource/
+resource/twitter_access_tokens
+resource/twitter_oauth

@@ -30,6 +30,7 @@ library:
   - text               # Haskellでは文字列の扱いがやや面倒なので、楽にする
   - aeson              # JSONパーザ
   - bytestring
+  - mecab
 
 executables:
   ykbr-ai-exe:

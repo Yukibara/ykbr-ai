@@ -4,15 +4,18 @@
 module Lib
     ( Tweet(..)
     ,tweet
+    ,kaiseki
     ) where
 
-import Data.Text
+import Data.Text as T
+import Data.Text.IO as T
 import Data.Text.Encoding
 import Data.Aeson
 import GHC.Generics
 import Network.HTTP.Conduit
 import Web.Authenticate.OAuth
 import Config
+import Text.MeCab
 
 newtype Tweet = Tweet { text :: Text
                        } deriving (Show, Generic)
@@ -42,3 +45,10 @@ tweet tw = do
         signedReq <- signOAuth botOAuth botCredential postReq
         httpLbs signedReq manager
     return ()
+
+kaiseki :: IO ()
+kaiseki = do
+  let text = "定義されていない参照ですではない"
+  mecab  <- new2 ""
+  result <- parse mecab text
+  T.putStrLn $ result
