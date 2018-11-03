@@ -21,7 +21,7 @@ import Config
 import Text.MeCab
 import System.Random (randomRIO)
 
-newtype Tweet = Tweet { getText :: T.Text } deriving (Show, Generic)
+newtype Tweet = Tweet { text :: T.Text } deriving (Show, Generic)
 data Word = Begin|Middle String|End deriving (Eq,Show, Generic)
 
 instance FromJSON Tweet
@@ -103,6 +103,7 @@ fromWord' (Middle x) = x
 fromWord' _ =""
 
 nextWord::[[Word]]->[Word]->IO(Maybe [Word])
+nextWord _ [] = return Nothing
 nextWord table prefix = randomSel(filter f table)
     where
         f xs=init xs==prefix
@@ -113,11 +114,13 @@ beginWord table = randomSel(filter f table)
         f(x:xs) = x == Begin
 
 randomSel::[a] -> IO(Maybe a)
+randomSel [] = return Nothing
 randomSel xs = return <$> randomOne xs
     where
         randomOne xs = (xs !!) <$> randomRIO(0,length xs-1)
 
 startWord::[String]->[Word]
+startWord []=[]
 startWord xs = Begin:init (convert xs)
     where
         convert::[String] -> [Word]
@@ -138,5 +141,4 @@ makeTable n abc@(x:xs)
         part = take n abc
 
 
-    -- エラーが15個くらい出ています
-    -- 終了
+    -- エラーが無くなったので神 勝ち 優勝
