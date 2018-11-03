@@ -22,7 +22,7 @@ import Text.MeCab
 import System.Random (randomRIO)
 
 newtype Tweet = Tweet { getText :: T.Text } deriving (Show, Generic)
-data Word = Begin|Middle T.Text|End deriving (Show, Generic)
+data Word = Begin|Middle String|End deriving (Eq,Show, Generic)
 
 instance FromJSON Tweet
 instance ToJSON Tweet
@@ -49,13 +49,12 @@ tweet tw = do
         httpLbs signedReq manager
     return ()
 
-ykbrTweet :: IO (Either String [Tweet])
-ykbrTweet = do 
+ykbrGetTweet :: IO (Either String [Tweet])
+ykbrGetTweet = do 
     -- 認証準備とかをします
     botOAuth <- readOAuth
     accessTokens <- readAccessTokens
     let botCredential = newCredential' accessTokens
-
     -- 取得
     result <- do
         req <-
@@ -80,48 +79,48 @@ generateBotTweet tweet = do
     let seedWord = intercalate ["\n"] sliceLine
 
     -- 3文字ごとに切り出してテーブルを作る
-    let kouho = makeTable 3 startWord seedWord
+    let kouho = makeTable 3 (startWord seedWord)
 
-    tmp <- beginWord table
+    tmp <- beginWord kouho
     case tmp of
         Nothing -> return ""
-        Just ra -> chainWord kouho (tail ra) (hogehogeFunc ra)
+        Just ra -> chainWord kouho (tail ra) (fromWord ra)
 
-chainWord::[[Word]]->[Word]->IO(Maybe[Word])
+chainWord::[[Word]] -> [Word] -> String -> IO String
 chainWord table prefix chain = do
-    next<-nextWord table prefix
+    next <- nextWord table prefix
     if last prefix == End
     then return chain
     else case next of 
         Nothing -> return chain
-        Just ws -> chainWord table (tail ws)(chain ++ maybe "" fromWord(last <$> next))
+        Just ws -> chainWord table (tail ws)(chain ++ maybe "" fromWord'(last <$> next))
 
 fromWord::[Word]->String
 fromWord = concatMap fromWord'
 
 fromWord'::Word -> String
-fromWord' (Middle x) =x
+fromWord' (Middle x) = x
 fromWord' _ =""
 
-nextWord::[[Word]]->[Word]->IO([Word])
+nextWord::[[Word]]->[Word]->IO(Maybe [Word])
 nextWord table prefix = randomSel(filter f table)
     where
         f xs=init xs==prefix
 
-beginWord::[[Word]]->IO(Word)
+beginWord::[[Word]]->IO(Maybe [Word])
 beginWord table = randomSel(filter f table)
     where
-        f(x:xs)=x==Begin 
+        f(x:xs) = x == Begin
 
-randomSel::[a] -> IO(a)
-randomSel xs=return <$> randomOne
+randomSel::[a] -> IO(Maybe a)
+randomSel xs = return <$> randomOne xs
     where
         randomOne xs = (xs !!) <$> randomRIO(0,length xs-1)
 
-startWord::[T.Text]->[Word]
+startWord::[String]->[Word]
 startWord xs = Begin:init (convert xs)
     where
-        convert::[T.Text] -> [Word]
+        convert::[String] -> [Word]
         convert[]=[]
         convert(x:xs)=
             if x=="\n"
