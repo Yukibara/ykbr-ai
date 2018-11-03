@@ -17,18 +17,12 @@ module Main where
 
     botTweet::[Tweet] -> IO()
     botTweet tl = do
-      -- ? Couldn't match type ‘Tweet’ with ‘[Char]’
-      --   Expected type: [[Char]]
-      --   Actual type: [Tweet]
-      -- [[Char]]なので実質[String]
-      -- 型があれ [Tweet]をどうにかしたい
-      -- ソリューション: [Tweet]をどうにかして[String]にする 優勝
-      let tmp = T.unpack $ text $ head tl
-      -- tlのheadをtextでTextにしてunpackでStringに
+      -- 優勝
+      -- この辺のコードはHaskellやめちまえって感じ
+      let tmp0 = map (text) tl
+      let tmp = map(T.unpack) tmp0
+      let tmpPerf = intercalate "\n" tmp
 
-      res<-generateBotTweet tmp
+      res<-generateBotTweet tmpPerf
       tweet $ T.pack res
       return ()
-
-    -- twToStringL::[Tweet] -> [String]
-    -- twToStringL twl = do

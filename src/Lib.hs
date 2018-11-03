@@ -65,12 +65,7 @@ ykbrGetTweet = do
         httpLbs signedReq manager
     return $ eitherDecode $ responseBody result
 
--- TODO:関数を実装する
--- makeTable    n文字ごとに切り出してテーブルを作る
--- startWord どこから切り出すか決める
--- beginWord    文頭(Nullとかで表現)で始まる行をランダムで選ぶ
--- chainWord    テーブルから連鎖するワードを選ぶ ここで連鎖させてもいいかも
--- hogehogeFunc リストを連結させていい感じにする
+
 generateBotTweet::String -> IO String
 generateBotTweet tweet = do
     mecab <- new2 ""
