@@ -32,6 +32,8 @@ library:
   - bytestring
   - mecab
   - random
+  - lens
+  - lens-aeson
 
 executables:
   ykbr-ai-exe:

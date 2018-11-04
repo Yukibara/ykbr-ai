@@ -19,8 +19,8 @@ module Main where
     botTweet tl = do
       -- 優勝
       -- この辺のコードはHaskellやめちまえって感じ
-      let tmp0 = map (text) tl
-      let tmp = map(T.unpack) tmp0
+      let tmp0 = map(T.unpack) $ map (text) tl
+      let tmp = filter((/="RT") . take 2) tmp0
       let tmpPerf = intercalate "\n" tmp
 
       res<-generateBotTweet tmpPerf

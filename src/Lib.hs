@@ -6,6 +6,7 @@ module Lib
     ,tweet
     ,ykbrGetTweet
     ,generateBotTweet
+    -- ,botGetFollower
     ) where
 
 import Prelude hiding(Word)
@@ -20,6 +21,8 @@ import Web.Authenticate.OAuth
 import Config
 import Text.MeCab
 import System.Random (randomRIO)
+import Control.Lens
+import Data.Aeson.Lens
 
 newtype Tweet = Tweet { text :: T.Text } deriving (Show, Generic)
 data Word = Begin|Middle String|End deriving (Eq,Show, Generic)
@@ -29,6 +32,7 @@ instance ToJSON Tweet
 
 botName = "ykbr__ai"
 ykbrID = "790512282753048577"
+botID="1056758363516690433"
 
 newCredential' :: TwitterAccessTokens -> Credential
 newCredential' accessTokens =
@@ -65,6 +69,32 @@ ykbrGetTweet = do
         httpLbs signedReq manager
     return $ eitherDecode $ responseBody result
 
+
+-- Haskellで差集合をとりたいけどData.Setがインポートできなかった 
+
+-- botGetFollower::IO()
+-- followBack = do
+--     -- TODO フォロバを実装する
+--     -- 認証準備をします はい
+--     botOAuth <- readOAuth
+--     accessTokens <- readAccessTokens
+--     let botCredential = newCredential' accessTokens
+--     follresult <- do 
+--         foreq <-
+--             parseRequest $ "https://api.twitter.com/1.1/followers/ids.json?user_id=" ++ botID
+--         signedReq <- signOAuth botOAuth botCredential foreq
+--         manager <- newManager tlsManagerSettings
+--         httpLbs signedReq manager
+--     friendresult <- do
+--         frireq <-
+--             parseRequest $ "https://api.twitter.com/1.1/friends/ids.json?user_id=" ++ botID
+--         signedReq <- signOAuth botOAuth botCredential frireq
+--         manager <- newManager tlsManagerSettings
+--         httpLbs signedReq manager
+    
+--     let follb = S.difference friendresult follresult
+
+--     return ()
 
 generateBotTweet::String -> IO String
 generateBotTweet tweet = do
