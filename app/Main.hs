@@ -20,7 +20,7 @@ module Main where
       -- 優勝
       -- この辺のコードはHaskellやめちまえって感じ
       let tmp0 = map(T.unpack) $ map (text) tl
-      let tmp = filter((/="RT") . take 2) tmp0
+      let tmp = filter((/="@") . take 1) $ filter((/="RT") . take 2) tmp0
       let tmpPerf = intercalate "\n" tmp
 
       res<-generateBotTweet tmpPerf
