@@ -6,14 +6,15 @@ module Lib
     ,tweet
     ,ykbrGetTweet
     ,generateBotTweet
-    -- ,botGetFollower
+    ,botGetFollower
     ) where
 
 import Prelude hiding(Word)
 import qualified Data.Text    as T
 import qualified Data.Text.IO as TIO
+import qualified Data.Vector  as V
 import Data.Text.Encoding
-import Data.List (intercalate)
+import Data.List (intercalate , (\\))
 import Data.Aeson
 import GHC.Generics
 import Network.HTTP.Conduit
@@ -69,32 +70,43 @@ ykbrGetTweet = do
         httpLbs signedReq manager
     return $ eitherDecode $ responseBody result
 
-
--- Haskellで差集合をとりたいけどData.Setがインポートできなかった 
-
--- botGetFollower::IO()
--- followBack = do
---     -- TODO フォロバを実装する
---     -- 認証準備をします はい
---     botOAuth <- readOAuth
---     accessTokens <- readAccessTokens
---     let botCredential = newCredential' accessTokens
---     follresult <- do 
---         foreq <-
---             parseRequest $ "https://api.twitter.com/1.1/followers/ids.json?user_id=" ++ botID
---         signedReq <- signOAuth botOAuth botCredential foreq
---         manager <- newManager tlsManagerSettings
---         httpLbs signedReq manager
---     friendresult <- do
---         frireq <-
---             parseRequest $ "https://api.twitter.com/1.1/friends/ids.json?user_id=" ++ botID
---         signedReq <- signOAuth botOAuth botCredential frireq
---         manager <- newManager tlsManagerSettings
---         httpLbs signedReq manager
+botGetFollower::IO()
+botGetFollower = do
+    -- TODO フォロバを実装する
+    -- 認証準備をします はい
+    botOAuth <- readOAuth
+    accessTokens <- readAccessTokens
+    let botCredential = newCredential' accessTokens
+    follresult <- do 
+        foreq <-
+            parseRequest $ "https://api.twitter.com/1.1/followers/ids.json?user_id=" ++ botID
+        signedReq <- signOAuth botOAuth botCredential foreq
+        manager <- newManager tlsManagerSettings
+        httpLbs signedReq manager
+    friendresult <- do
+        frireq <-
+            parseRequest $ "https://api.twitter.com/1.1/friends/ids.json?user_id=" ++ botID
+        signedReq <- signOAuth botOAuth botCredential frireq
+        manager <- newManager tlsManagerSettings
+        httpLbs signedReq manager
     
---     let follb = S.difference friendresult follresult
+    -- 動いてくれ～～～～～～～～～ぐわ～～～～～～～～～～～～～～
+    let fol = responseBody follresult ^? key "ids" . _Array
+    let fri = responseBody friendresult ^? key "ids" . _Array
 
---     return ()
+    case fol of
+        Just follo -> do
+            case fri of
+                Just friend -> do
+                    let listfoll = V.toList follo
+                    let listfriend = V.toList friend
+                    let resss = listfoll \\ listfriend
+                    print resss -- とりあえず確認のため
+                    -- TODO うまく差分をとれたのでいい感じにPOSTしたい
+                Nothing -> TIO.putStrLn "!!ERROR!!"
+        Nothing -> TIO.putStrLn "!!ERROR!!"
+
+    return ()
 
 generateBotTweet::String -> IO String
 generateBotTweet tweet = do

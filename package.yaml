@@ -34,6 +34,7 @@ library:
   - random
   - lens
   - lens-aeson
+  - vector
 
 executables:
   ykbr-ai-exe:
